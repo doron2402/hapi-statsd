@@ -5,7 +5,7 @@ var plugin = require('../index.js');
 
 describe('plugin attributes', function() {
   it('should contain name', function() {
-    expect(plugin.register.attributes.name).to.equal('hapi-statsd');
+    expect(plugin.register.attributes.name).to.equal('ot-hapi-statsd');
   });
 
   it('should contain version', function() {

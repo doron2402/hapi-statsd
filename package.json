@@ -1,5 +1,5 @@
 {
-  "name": "hapi-statsd",
+  "name": "ot-hapi-statsd",
   "version": "0.1.0",
   "description": "Hapi.js stats plugin",
   "main": "index.js",
