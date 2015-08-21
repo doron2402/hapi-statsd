@@ -28,4 +28,5 @@ node_modules
 .vagrant
 idea/workspace.xml
 .DS_Store
-/nbproject/private/
+/nbproject/private
+/nbproject/*
