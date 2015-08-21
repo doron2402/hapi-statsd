@@ -5,24 +5,11 @@ var os = require('os');
 var rewire = require('rewire');
 var plugin = rewire('../src/plugin.js');
 
-describe('onPreResponse', function() {
+describe('onRequest', function() {
   describe('Plugin', function() {
       var incrementName = [];
-      var timingName = [];
-      var statsdCall = {
-          increment: [ 
-            'request.in._test_endpoint.counter',
-            'request.in.Total.counter',
-            'response.out.Total.counter',
-            'response.out.Total.200.counter',
-            'request.out._test_endpoint.counter',
-            'request.out._test_endpoint.200.counter' 
-        ],
-          timing: [ 
-                { name: 'request.Total.timer' },
-                { name: 'request._test_endpoint.timer' } 
-            ]
-      };
+      var firstIncCall = 'request.in._test_endpoint.counter';
+      var secondIncCall = 'request.in.Total.counter';
     before(function(done){
         var settings = {
             host: 'statsd.localhost',
@@ -34,10 +21,12 @@ describe('onPreResponse', function() {
             ext: function(_, handler) {
                 plugin.__set__('sdc', {
                     increment: function(name) {
-                        incrementName.push(name);
+                        if (_ === 'onRequest') {
+                            incrementName.push(name);
+                        }
                     },
                     timing: function(name, value) {
-                        timingName.push({name : name, value: value});
+                        return;
                     }
                 });
 
@@ -54,7 +43,7 @@ describe('onPreResponse', function() {
                         settings: {
                             plugins: {
                                 'hapi-statsd': {
-                                    endpoint: 'test-endpoint',
+                                    endpoint: 'test/endpoint',
                                     version: 'test-version'
                                 }
                             }
@@ -68,19 +57,12 @@ describe('onPreResponse', function() {
                 }
             }, settings, function() {});
         });
-        
-        incrementName.forEach(function (value, i){
-            it('Counter should be equal : `' + statsdCall.increment[i] + '`', function() {
-                expect(value).to.equal(statsdCall.increment[i]);
-            });            
+        it('Counter first call should be equal : `'+ firstIncCall +'`', function() {
+            expect(incrementName[0]).to.equal(firstIncCall);
         });
-
-        statsdCall.timing.forEach(function(value, i){
-            it('Timer Should be equal : `' + statsdCall.timing[i].name + '`', function(){ 
-                expect(timingName[i].name).to.equal(statsdCall.timing[i].name);
-                expect(timingName[i].value).to.exist;
-           });
+        it('Counter second call should be equal : `'+ secondIncCall +'`', function() {
+            expect(incrementName[1]).to.equal(secondIncCall)            
         });
-        
+       
     });
   });

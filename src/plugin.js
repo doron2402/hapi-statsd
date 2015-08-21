@@ -19,7 +19,7 @@ exports.register = function(plugin, options, next){
 
   var timer = new Date();
   sdc = new Sdc(options);
-  plugin.ext('onRequest', function(request, reply) {
+  plugin.ext('onRequest', function(request, reply) {    
     var url = request.path.replace(/\//g,'_');
     sdc.increment('request.in.' + url + '.counter');
     sdc.increment('request.in.Total.counter');
