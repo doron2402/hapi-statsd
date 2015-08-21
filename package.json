@@ -1,0 +1,41 @@
+{
+  "name": "hapi-statsd",
+  "version": "0.1.0",
+  "description": "Hapi.js stats plugin",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "grunt && node_modules/mocha/bin/mocha --reporter spec --timeout 5s"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doron2402/hapi-statsd.git"
+  },
+  "keywords": [
+    "Hapi.js",
+    "Plugin",
+    "Statsd",
+    "logging"
+  ],
+  "author": "Doron Segal <doron2402>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/doron2402/hapi-statsd/issues"
+  },
+  "homepage": "https://github.com/doron2402/hapi-statsd#readme",
+  "dependencies": {
+    "joi": "^6.6.1",
+    "statsd-client": "^0.1.0"
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-eslint": "^17.1.0",
+    "mocha": "^2.2.5",
+    "rewire": "^2.3.4",
+    "time-grunt": "^1.2.1"
+  }
+}
