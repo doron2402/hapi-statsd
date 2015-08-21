@@ -1,6 +1,7 @@
 'use strict';
 var Sdc = require('statsd-client');
 var Joi = require('joi');
+var sdc;
 
 exports.register = function(plugin, options, next){
   var schemaOptions = Joi.object().options({ abortEarly: false }).keys({
@@ -17,7 +18,7 @@ exports.register = function(plugin, options, next){
   }
 
   var timer = new Date();
-  var sdc = new Sdc(options);
+  sdc = new Sdc(options);
   plugin.ext('onRequest', function(request, reply) {
     var url = request.path.replace(/\//g,'_');
     sdc.increment('request.in.' + url + '.counter');
