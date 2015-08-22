@@ -10,17 +10,17 @@ describe('onPreResponse', function() {
       var incrementName = [];
       var timingName = [];
       var statsdCall = {
-          increment: [ 
+          increment: [
             'request.in._test_endpoint.counter',
             'request.in.Total.counter',
             'response.out.Total.counter',
             'response.out.Total.200.counter',
             'request.out._test_endpoint.counter',
-            'request.out._test_endpoint.200.counter' 
+            'request.out._test_endpoint.200.counter'
         ],
-          timing: [ 
+          timing: [
                 { name: 'request.Total.timer' },
-                { name: 'request._test_endpoint.timer' } 
+                { name: 'request._test_endpoint.timer' }
             ]
       };
     before(function(done){
@@ -49,7 +49,7 @@ describe('onPreResponse', function() {
                     response: {
                         statusCode: 200
                     },
-                    path: '/test/endpoint',
+                    url: { pathname: '/test/endpoint' },
                     route: {
                         settings: {
                             plugins: {
@@ -68,19 +68,19 @@ describe('onPreResponse', function() {
                 }
             }, settings, function() {});
         });
-        
+
         incrementName.forEach(function (value, i){
             it('Counter should be equal : `' + statsdCall.increment[i] + '`', function() {
                 expect(value).to.equal(statsdCall.increment[i]);
-            });            
+            });
         });
 
         statsdCall.timing.forEach(function(value, i){
-            it('Timer Should be equal : `' + statsdCall.timing[i].name + '`', function(){ 
+            it('Timer Should be equal : `' + statsdCall.timing[i].name + '`', function(){
                 expect(timingName[i].name).to.equal(statsdCall.timing[i].name);
                 expect(timingName[i].value).to.exist;
            });
         });
-        
+
     });
   });

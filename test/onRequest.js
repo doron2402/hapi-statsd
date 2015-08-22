@@ -38,7 +38,7 @@ describe('onRequest', function() {
                     response: {
                         statusCode: 200
                     },
-                    path: '/test/endpoint',
+                    url: { pathname: '/test/endpoint' },
                     route: {
                         settings: {
                             plugins: {
@@ -61,8 +61,8 @@ describe('onRequest', function() {
             expect(incrementName[0]).to.equal(firstIncCall);
         });
         it('Counter second call should be equal : `'+ secondIncCall +'`', function() {
-            expect(incrementName[1]).to.equal(secondIncCall)            
+            expect(incrementName[1]).to.equal(secondIncCall)
         });
-       
+
     });
   });

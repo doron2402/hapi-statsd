@@ -19,15 +19,15 @@ exports.register = function(plugin, options, next){
 
   var timer = new Date();
   sdc = new Sdc(options);
-  plugin.ext('onRequest', function(request, reply) {    
-    var url = request.path.replace(/\//g,'_');
+  plugin.ext('onRequest', function(request, reply) {
+    var url = request.url.pathname.replace(/\//g,'_');
     sdc.increment('request.in.' + url + '.counter');
     sdc.increment('request.in.Total.counter');
     reply.continue();
   });
 
   plugin.ext('onPreResponse', function(request, reply) {
-    var url = request.path.replace(/\//g,'_');
+    var url = request.url.pathname.replace(/\//g,'_');
     var statusCode = isNaN(request.response.statusCode) ? 0 : request.response.statusCode;
     sdc.increment('response.out.Total.counter');
     sdc.increment('response.out.Total.' + statusCode + '.counter');
