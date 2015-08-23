@@ -8,7 +8,7 @@ var plugin = rewire('../src/plugin.js');
 describe('onRequest', function() {
   describe('Plugin', function() {
       var incrementName = [];
-      var firstIncCall = 'request.in._test_endpoint.counter';
+      var firstIncCall = 'request.in.test.endpoint.counter';
       var secondIncCall = 'request.in.Total.counter';
     before(function(done){
         var settings = {

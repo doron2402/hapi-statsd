@@ -11,16 +11,16 @@ describe('onPreResponse', function() {
       var timingName = [];
       var statsdCall = {
           increment: [
-            'request.in._test_endpoint.counter',
+            'request.in.test.endpoint.counter',
             'request.in.Total.counter',
             'response.out.Total.counter',
             'response.out.Total.200.counter',
-            'request.out._test_endpoint.counter',
-            'request.out._test_endpoint.200.counter'
+            'request.out.test.endpoint.counter',
+            'request.out.test.endpoint.200.counter'
         ],
           timing: [
                 { name: 'request.Total.timer' },
-                { name: 'request._test_endpoint.timer' }
+                { name: 'request.test.endpoint.timer' }
             ]
       };
     before(function(done){
@@ -54,7 +54,7 @@ describe('onPreResponse', function() {
                         settings: {
                             plugins: {
                                 'hapi-statsd': {
-                                    endpoint: 'test-endpoint',
+                                    endpoint: 'test/endpoint',
                                     version: 'test-version'
                                 }
                             }
