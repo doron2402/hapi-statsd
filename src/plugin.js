@@ -44,8 +44,8 @@ exports.register = function(plugin, options, next){
     var statusCode = isNaN(request.response.statusCode) ? 0 : request.response.statusCode;
     sdc.increment('response.out.Total.counter');
     sdc.increment('response.out.Total.' + statusCode + '.counter');
-    sdc.increment('request.out.' + url + '.counter');
-    sdc.increment('request.out.' + url + '.' + statusCode + '.counter');
+    sdc.increment('response.out.' + url + '.counter');
+    sdc.increment('response.out.' + url + '.' + statusCode + '.counter');
     sdc.timing('request.Total.timer',timer);
     sdc.timing('request.' + url + '.timer',timer);
     reply.continue();
