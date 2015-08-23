@@ -1,6 +1,6 @@
 {
   "name": "ot-hapi-statsd",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Hapi.js stats plugin",
   "main": "index.js",
   "directories": {

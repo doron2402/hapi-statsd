@@ -42,6 +42,9 @@ exports.register = function(plugin, options, next){
     var url = request.url.pathname.replace(/\//g,'.');
     url = removeDotStartEnd(url);
     var statusCode = isNaN(request.response.statusCode) ? 0 : request.response.statusCode;
+    if (statusCode === 0 && request.response.output && request.response.output.statusCode) {
+      statusCode = request.response.output.statusCode;
+    }
     sdc.increment('response.out.Total.counter');
     sdc.increment('response.out.Total.' + statusCode + '.counter');
     sdc.increment('response.out.' + url + '.counter');
