@@ -14,6 +14,20 @@ This will track your
     - Count: response by url
     - Count: response by url and status code
 
+STATSD
+=======
+    - For Ex' [GET] /users/all -> Response [200]
+    - onRequest 
+        - Count: increment `request.in.users.all.counter'
+        - Count: increment `request.in.Total.counter`
+    - onPreResponse
+        - Count increment `response.out.Total.counter`
+        - Count increment `response.out.Total.200.counter`
+        - Count increment `response.out.users.all.counter`
+        - Count increment `response.out.users.all.200.counter`
+        - Timer `request.Total.timer`
+        - Timer `request.users.all.timer`
+
 [![Build Status](https://secure.travis-ci.org/doron2402/hapi-statsd.png?branch=master)](http://travis-ci.org/doron2402/hapi-statsd)
 
 Quick tour
