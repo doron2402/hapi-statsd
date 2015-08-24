@@ -15,6 +15,10 @@ exports.register = function(plugin, options, next){
 
     return str;
   };
+
+  var buildUrl = function(pathname) {
+    return removeDotStartEnd(pathname.replace(/\./g,'++').replace(/\//g,'.'));
+  };
   var schemaOptions = Joi.object().options({ abortEarly: false }).keys({
     host: Joi.string(),
     prefix: Joi.string(),
@@ -31,16 +35,14 @@ exports.register = function(plugin, options, next){
   var timer = new Date();
   sdc = new Sdc(options);
   plugin.ext('onRequest', function(request, reply) {
-    var url = request.url.pathname.replace(/\//g,'.');
-    url = removeDotStartEnd(url);
+    var url = buildUrl(request.url.pathname);
     sdc.increment('request.in.' + url + '.counter');
     sdc.increment('request.in.Total.counter');
     reply.continue();
   });
 
   plugin.ext('onPreResponse', function(request, reply) {
-    var url = request.url.pathname.replace(/\//g,'.');
-    url = removeDotStartEnd(url);
+    var url = buildUrl(request.url.pathname);
     var statusCode = isNaN(request.response.statusCode) ? 0 : request.response.statusCode;
     if (statusCode === 0 && request.response.output && request.response.output.statusCode) {
       statusCode = request.response.output.statusCode;
