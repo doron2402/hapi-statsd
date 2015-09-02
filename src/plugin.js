@@ -55,5 +55,16 @@ exports.register = function(plugin, options, next){
     sdc.timing('request.' + url + '.timer',timer);
     reply.continue();
   });
+
+  plugin.ext('tail', function(request) {
+    console.log('here....');
+    var route = request.response.request.route;
+    var statusCode = request.response.statusCode;
+    sdc.increment('tail.request.in.' + route.method + '.' + route.path + '.counter');
+    if (statusCode !== 200) {
+      sdc.increment('tail.response.out.error.' + route.method + '.' + route.path + '.' + statusCode + '.counter');
+    }
+    sdc.increment('tail.response.out.' + route.method + '.' + route.path + '.' + statusCode + '.counter');
+  });
   next();
 };
