@@ -57,7 +57,6 @@ exports.register = function(plugin, options, next){
   });
 
   plugin.ext('tail', function(request) {
-    console.log('here....');
     var route = request.response.request.route;
     var statusCode = request.response.statusCode;
     sdc.increment('tail.request.in.' + route.method + '.' + route.path + '.counter');
