@@ -29,7 +29,6 @@ describe('on tail event', function() {
             };
             plugin.register({
               ext: function(_, handler) {
-                console.log(_);
                 plugin.__set__('sdc', {
                   increment: function(name) {
 
