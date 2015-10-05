@@ -122,6 +122,5 @@ describe('onRequest', function() {
         it('Counter second call should be equal : `'+ secondIncCall +'`', function() {
             expect(incrementName[1]).to.equal(secondIncCall)
         });
-
     });
   });

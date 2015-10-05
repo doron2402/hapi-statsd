@@ -17,12 +17,8 @@ describe('onPreResponse', function() {
                 'response.out.Total.200.counter',
                 'request.in.test.endpoint.counter',
                 'request.in.Total.counter'
-          ],
-          timing: [
-              { name: 'request.Total.timer' },
-              { name: 'request.test.endpoint.timer' }
-            ]
-          };
+          ]
+        };
         describe('Plugin', function() {
           before(function(done){
             var settings = {
@@ -77,17 +73,9 @@ describe('onPreResponse', function() {
                 });
               });
           });
-          describe('Timing', function(){
-            statsdCall.timing.forEach(function(value, i){
-              it('Timer Should be equal : `' + statsdCall.timing[i].name + '`', function(){
-                expect(timingName[i].name).to.equal(statsdCall.timing[i].name);
-                expect(timingName[i].value).to.exist;
-              });
-            });
-          });
-        });
+       });
     });
-    
+
     describe('When part of the URL contains dots, for ex` IP address', function() {
         var incrementName = [];
         var timingName = [];
@@ -99,11 +87,7 @@ describe('onPreResponse', function() {
                 'response.out.Total.200.counter',
                 'request.in.api.v1.IP.123++123++123++123.counter',
                 'request.in.Total.counter'
-          ],
-          timing: [
-              { name: 'request.Total.timer' },
-              { name: 'request.api.v1.IP.123++123++123++123.timer' }
-            ]
+          ]
           };
         describe('Plugin', function() {
           before(function(done){
@@ -159,17 +143,9 @@ describe('onPreResponse', function() {
                 });
               });
           });
-          describe('Timing', function(){
-            statsdCall.timing.forEach(function(value, i){
-              it('Timer Should be equal : `' + statsdCall.timing[i].name + '`', function(){
-                expect(timingName[i].name).to.equal(statsdCall.timing[i].name);
-                expect(timingName[i].value).to.exist;
-              });
-            });
-          });
         });
     });
-    
+
     describe('500 Status Code', function() {
         var incrementName = [];
         var timingName = [];
@@ -181,11 +157,7 @@ describe('onPreResponse', function() {
                 'response.out.Total.500.counter',
                 'request.in.test.endpoint.counter',
                 'request.in.Total.counter'
-          ],
-          timing: [
-              { name: 'request.Total.timer' },
-              { name: 'request.test.endpoint.timer' }
-            ]
+          ]
           };
         describe('Plugin', function() {
           before(function(done){
@@ -240,14 +212,6 @@ describe('onPreResponse', function() {
                   expect(value).to.equal(statsdCall.increment[i]);
                 });
               });
-          });
-          describe('Timing', function(){
-            statsdCall.timing.forEach(function(value, i){
-              it('Timer Should be equal : `' + statsdCall.timing[i].name + '`', function(){
-                expect(timingName[i].name).to.equal(statsdCall.timing[i].name);
-                expect(timingName[i].value).to.exist;
-              });
-            });
           });
         });
     });

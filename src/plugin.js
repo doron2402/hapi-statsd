@@ -17,7 +17,7 @@ exports.register = function(plugin, options, next){
   };
 
   var buildUrl = function(pathname) {
-    return removeDotStartEnd(pathname.replace(/\./g,'++').replace(/\//g,'.'));
+    return removeDotStartEnd(pathname.replace(/\./gi,'++').replace(/\//gi,'.'));
   };
   var schemaOptions = Joi.object().options({ abortEarly: false }).keys({
     host: Joi.string(),
@@ -32,12 +32,14 @@ exports.register = function(plugin, options, next){
     return next(validate.error);
   }
 
-  var timer = new Date();
   sdc = new Sdc(options);
   plugin.ext('onRequest', function(request, reply) {
     var url = buildUrl(request.url.pathname);
     sdc.increment('request.in.' + url + '.counter');
     sdc.increment('request.in.Total.counter');
+    request.app = request.app || {};
+    request.app.statsd = request.app.statsd || {};
+    request.app.statsd.timer = new Date();
     reply.continue();
   });
 
@@ -51,19 +53,20 @@ exports.register = function(plugin, options, next){
     sdc.increment('response.out.Total.' + statusCode + '.counter');
     sdc.increment('response.out.' + url + '.counter');
     sdc.increment('response.out.' + url + '.' + statusCode + '.counter');
-    sdc.timing('request.Total.timer',timer);
-    sdc.timing('request.' + url + '.timer',timer);
     reply.continue();
   });
 
   plugin.ext('tail', function(request) {
     var route = request.response.request.route;
+    var timer = (request.app && request.app.statsd && request.app.statsd.timer) ? request.app.statsd.timer : new Date();
+    var deltaTimer = timer instanceof Date ? new Date() - timer : timer;
     var statusCode = request.response.statusCode;
     sdc.increment('tail.request.in.' + route.method + '.' + route.path + '.counter');
     if (statusCode !== 200) {
       sdc.increment('tail.response.out.error.' + route.method + '.' + route.path + '.' + statusCode + '.counter');
     }
     sdc.increment('tail.response.out.' + route.method + '.' + route.path + '.' + statusCode + '.counter');
+    sdc.timing('request.' + url + '.timer', deltaTimer);
   });
   next();
 };

@@ -5,7 +5,7 @@ var os = require('os');
 var rewire = require('rewire');
 var plugin = rewire('../src/plugin.js');
 
-describe('on tail event', function() {
+describe.only('on tail event', function() {
     describe('200 Status Code', function() {
         var incrementName = [];
         var timingName = [];
@@ -17,6 +17,9 @@ describe('on tail event', function() {
                 'response.out.Total.200.counter',
                 'request.in.test.endpoint.counter',
                 'request.in.Total.counter'
+          ],
+          timing: [
+            { name: 'request.test.endpoint.timer' }
           ]
         };
         describe('Plugin', function() {
@@ -31,13 +34,10 @@ describe('on tail event', function() {
               ext: function(_, handler) {
                 plugin.__set__('sdc', {
                   increment: function(name) {
-
-                    if (name === 'tail'){
                       incrementName.push(name);
-                    }
                   },
                   timing: function(name, value) {
-                    return;
+                    timingName.push({name : name, value: value});
                   }
                 });
 
@@ -76,6 +76,14 @@ describe('on tail event', function() {
                 });
               });
           });
+          describe('Timing', function(){
+            statsdCall.timing.forEach(function(value, i){
+              it('Timer Should be equal : `' + statsdCall.timing[i].name + '`', function(){
+                expect(timingName[i].name).to.equal(statsdCall.timing[i].name);
+                expect(timingName[i].value).to.exist;
+              });
+            });
         });
     });
+  });
 });
