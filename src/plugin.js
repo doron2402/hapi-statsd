@@ -36,16 +36,17 @@ exports.register = function(plugin, options, next){
 
   plugin.ext('tail', function(request) {
     var route = request.response.request.route;
+    var method = route.method.toString().toLowerCase();
     var timer = (request.app && request.app.statsd && request.app.statsd.timer) ? request.app.statsd.timer : new Date();
     var deltaTimer = timer instanceof Date ? new Date() - timer : timer;
     var statusCode = request.response.statusCode;
     var url = buildUrl(request.url.pathname);
-    sdc.increment('tail.request.in.' + route.method + '.' + route.path + '.counter');
+    sdc.increment('tail.request.in.' + method + '.' + url + '.counter');
     if (statusCode !== 200) {
-      sdc.increment('tail.response.out.error.' + route.method + '.' + route.path + '.' + statusCode + '.counter');
+      sdc.increment('tail.response.out.error.' + method + '.' + url + '.' + statusCode + '.counter');
     }
-    sdc.increment('tail.response.out.' + route.method + '.' + route.path + '.' + statusCode + '.counter');
-    sdc.timing('request.' + url + '.timer', deltaTimer);
+    sdc.increment('tail.response.out.' + method + '.' + url + '.' + statusCode + '.counter');
+    sdc.timing('request.'+ method + '.' + url + '.timer', deltaTimer);
   });
 
 
