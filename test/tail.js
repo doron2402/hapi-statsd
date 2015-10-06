@@ -29,7 +29,7 @@ describe('on tail event', function() {
             plugin.register({
               ext: function(_, handler) {
                 if (_ !== 'tail') {
-                  return done();
+                  return;
                 }
                 plugin.__set__('sdc', {
                   increment: function(name) {
@@ -115,7 +115,7 @@ describe('on tail event', function() {
             plugin.register({
               ext: function(_, handler) {
                 if (_ !== 'tail') {
-                  return done();
+                  return;
                 }
                 plugin.__set__('sdc', {
                   increment: function(name) {

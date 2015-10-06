@@ -20,7 +20,6 @@ describe('onRequest', function() {
         plugin.register({
             ext: function(_, handler) {
               if (_ !== 'onRequest'){
-                done();
                 return;
               }
 

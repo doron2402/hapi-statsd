@@ -12,11 +12,9 @@ describe('onPreResponse', function() {
         var statsdCall = {
             increment: [
                 'response.out.Total.counter',
+                'response.out.Total.200.counter',
                 'response.out.test.endpoint.counter',
                 'response.out.test.endpoint.200.counter',
-                'response.out.Total.200.counter',
-                'request.in.test.endpoint.counter',
-                'request.in.Total.counter'
           ]
         };
         describe('Plugin', function() {
@@ -30,7 +28,7 @@ describe('onPreResponse', function() {
             plugin.register({
               ext: function(_, handler) {
                 if (_ !== 'onPreResponse'){
-                  return done();
+                  return;
                 }
                 plugin.__set__('sdc', {
                   increment: function(name) {
@@ -77,8 +75,8 @@ describe('onPreResponse', function() {
 
           describe('Increment', function(){
               statsdCall.increment.forEach(function (value, i){
-                it('Counter should be equal : `' + statsdCall.increment[i] + '`', function() {
-                  expect(value).to.equal(statsdCall.increment[i]);
+                it('Counter should be equal : `' + value + '`', function() {
+                  expect(value).to.equal(incrementName[i]);
                 });
               });
           });
@@ -91,11 +89,9 @@ describe('onPreResponse', function() {
         var statsdCall = {
             increment: [
                 'response.out.Total.counter',
-                'response.out.api.v1.IP.123++123++123++123.counter',
-                'response.out.api.v1.IP.123++123++123++123.200.counter',
                 'response.out.Total.200.counter',
-                'request.in.api.v1.IP.123++123++123++123.counter',
-                'request.in.Total.counter'
+                'response.out.api.v1.IP.123++123++123++123.counter',
+                'response.out.api.v1.IP.123++123++123++123.200.counter'
           ]
           };
         describe('Plugin', function() {
@@ -109,7 +105,7 @@ describe('onPreResponse', function() {
             plugin.register({
               ext: function(_, handler) {
                 if (_ !== 'onPreResponse') {
-                  return done();
+                  return;
                 }
                 plugin.__set__('sdc', {
                   increment: function(name) {
@@ -150,8 +146,8 @@ describe('onPreResponse', function() {
 
           describe('Increment', function(){
               statsdCall.increment.forEach(function (value, i){
-                it('Counter should be equal : `' + statsdCall.increment[i] + '`', function() {
-                  expect(value).to.equal(statsdCall.increment[i]);
+                it('Counter should be equal : `' + value + '`', function() {
+                  expect(value).to.equal(incrementName[i]);
                 });
               });
           });
@@ -164,11 +160,9 @@ describe('onPreResponse', function() {
         var statsdCall = {
             increment: [
                 'response.out.Total.counter',
+                'response.out.Total.500.counter',
                 'response.out.test.endpoint.counter',
                 'response.out.test.endpoint.500.counter',
-                'response.out.Total.500.counter',
-                'request.in.test.endpoint.counter',
-                'request.in.Total.counter'
           ]
           };
         describe('Plugin', function() {
@@ -182,7 +176,7 @@ describe('onPreResponse', function() {
             plugin.register({
               ext: function(_, handler) {
                 if (_ !== 'onPreResponse') {
-                  return done();
+                  return;
                 }
                 plugin.__set__('sdc', {
                   increment: function(name) {
@@ -223,8 +217,8 @@ describe('onPreResponse', function() {
 
           describe('Increment', function(){
               statsdCall.increment.forEach(function (value, i){
-                it('Counter should be equal : `' + statsdCall.increment[i] + '`', function() {
-                  expect(value).to.equal(statsdCall.increment[i]);
+                it('Counter should be equal : `' + value + '`', function() {
+                  expect(value).to.equal(incrementName[i]);
                 });
               });
           });
