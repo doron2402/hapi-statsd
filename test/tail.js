@@ -5,7 +5,7 @@ var os = require('os');
 var rewire = require('rewire');
 var plugin = rewire('../src/plugin.js');
 
-describe.only('on tail event', function() {
+describe('on tail event', function() {
     describe('200 Status Code', function() {
         var incrementName = [];
         var timingName = [];
@@ -19,7 +19,7 @@ describe.only('on tail event', function() {
                 'request.in.Total.counter'
           ],
           timing: [
-            { name: 'request.test.endpoint.timer' }
+            { name: 'request.api.users.doron.timer' }
           ]
         };
         describe('Plugin', function() {
@@ -32,6 +32,9 @@ describe.only('on tail event', function() {
             };
             plugin.register({
               ext: function(_, handler) {
+                if (_ !== 'tail') {
+                  return done();
+                }
                 plugin.__set__('sdc', {
                   increment: function(name) {
                       incrementName.push(name);
@@ -47,6 +50,12 @@ describe.only('on tail event', function() {
                   },
                   method: 'get',
                   response: {
+                    request: {
+                      route: {
+                        path: '/api/users/doron',
+                        mathod: 'GET'
+                      }
+                    },
                     statusCode: 200
                   },
                   url: { pathname: '/api/users/doron' },
@@ -60,13 +69,9 @@ describe.only('on tail event', function() {
                       }
                     }
                   }
-                }, {
-                  continue: function() {
-                    done();
-                  }
                 });
               }
-            }, settings, function() {});
+            }, settings, done);
           });
 
           describe('Increment', function(){

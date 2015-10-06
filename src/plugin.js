@@ -33,6 +33,22 @@ exports.register = function(plugin, options, next){
   }
 
   sdc = new Sdc(options);
+
+  plugin.ext('tail', function(request) {
+    var route = request.response.request.route;
+    var timer = (request.app && request.app.statsd && request.app.statsd.timer) ? request.app.statsd.timer : new Date();
+    var deltaTimer = timer instanceof Date ? new Date() - timer : timer;
+    var statusCode = request.response.statusCode;
+    var url = buildUrl(request.url.pathname);
+    sdc.increment('tail.request.in.' + route.method + '.' + route.path + '.counter');
+    if (statusCode !== 200) {
+      sdc.increment('tail.response.out.error.' + route.method + '.' + route.path + '.' + statusCode + '.counter');
+    }
+    sdc.increment('tail.response.out.' + route.method + '.' + route.path + '.' + statusCode + '.counter');
+    sdc.timing('request.' + url + '.timer', deltaTimer);
+  });
+
+
   plugin.ext('onRequest', function(request, reply) {
     var url = buildUrl(request.url.pathname);
     sdc.increment('request.in.' + url + '.counter');
@@ -56,17 +72,5 @@ exports.register = function(plugin, options, next){
     reply.continue();
   });
 
-  plugin.ext('tail', function(request) {
-    var route = request.response.request.route;
-    var timer = (request.app && request.app.statsd && request.app.statsd.timer) ? request.app.statsd.timer : new Date();
-    var deltaTimer = timer instanceof Date ? new Date() - timer : timer;
-    var statusCode = request.response.statusCode;
-    sdc.increment('tail.request.in.' + route.method + '.' + route.path + '.counter');
-    if (statusCode !== 200) {
-      sdc.increment('tail.response.out.error.' + route.method + '.' + route.path + '.' + statusCode + '.counter');
-    }
-    sdc.increment('tail.response.out.' + route.method + '.' + route.path + '.' + statusCode + '.counter');
-    sdc.timing('request.' + url + '.timer', deltaTimer);
-  });
   next();
 };

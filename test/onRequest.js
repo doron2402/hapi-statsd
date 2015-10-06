@@ -19,6 +19,11 @@ describe('onRequest', function() {
         };
         plugin.register({
             ext: function(_, handler) {
+              if (_ !== 'onRequest'){
+                done();
+                return;
+              }
+
                 plugin.__set__('sdc', {
                     increment: function(name) {
                         if (_ === 'onRequest') {
@@ -36,7 +41,13 @@ describe('onRequest', function() {
                     },
                     method: 'get',
                     response: {
-                        statusCode: 200
+                      request: {
+                        route: {
+                          path: '/test/endpoint',
+                          method: 'GET'
+                        }
+                      },
+                      statusCode: 200
                     },
                     url: { pathname: '/test/endpoint' },
                     route: {
@@ -78,6 +89,11 @@ describe('onRequest', function() {
         };
         plugin.register({
             ext: function(_, handler) {
+              if (_ !== 'onRequest'){
+                done();
+                return;
+              }
+
                 plugin.__set__('sdc', {
                     increment: function(name) {
                         if (_ === 'onRequest') {

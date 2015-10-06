@@ -29,6 +29,9 @@ describe('onPreResponse', function() {
             };
             plugin.register({
               ext: function(_, handler) {
+                if (_ !== 'onPreResponse'){
+                  return done();
+                }
                 plugin.__set__('sdc', {
                   increment: function(name) {
                     incrementName.push(name);
@@ -44,6 +47,12 @@ describe('onPreResponse', function() {
                   },
                   method: 'get',
                   response: {
+                    request: {
+                      route: {
+                        path: '/test/endpoint',
+                        method: 'GET'
+                      }
+                    },
                     statusCode: 200
                   },
                   url: { pathname: '/test/endpoint' },
@@ -99,6 +108,9 @@ describe('onPreResponse', function() {
             };
             plugin.register({
               ext: function(_, handler) {
+                if (_ !== 'onPreResponse') {
+                  return done();
+                }
                 plugin.__set__('sdc', {
                   increment: function(name) {
                     incrementName.push(name);
@@ -169,6 +181,9 @@ describe('onPreResponse', function() {
             };
             plugin.register({
               ext: function(_, handler) {
+                if (_ !== 'onPreResponse') {
+                  return done();
+                }
                 plugin.__set__('sdc', {
                   increment: function(name) {
                     incrementName.push(name);
