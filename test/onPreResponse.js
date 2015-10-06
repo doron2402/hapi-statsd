@@ -15,7 +15,10 @@ describe('onPreResponse', function() {
                 'response.out.Total.200.counter',
                 'response.out.test.endpoint.counter',
                 'response.out.test.endpoint.200.counter',
-          ]
+            ],
+            timing: [
+              { name: 'request.test.endpoint.200.timer' }
+            ]
         };
         describe('Plugin', function() {
           before(function(done){
@@ -80,6 +83,18 @@ describe('onPreResponse', function() {
                 });
               });
           });
+          describe('Timing', function(){
+            statsdCall.timing.forEach(function(value, i){
+              it('Timer Should be equal : `' + statsdCall.timing[i].name + '`', function(){
+                expect(timingName[i].name).to.equal(statsdCall.timing[i].name);
+                expect(timingName[i].value).to.exist;
+              });
+
+              it('Timer Should pass a number', function(){
+                expect(!isNaN(timingName[i].value)).to.be.true;
+              });
+            });
+          });
        });
     });
 
@@ -92,8 +107,11 @@ describe('onPreResponse', function() {
                 'response.out.Total.200.counter',
                 'response.out.api.v1.IP.123++123++123++123.counter',
                 'response.out.api.v1.IP.123++123++123++123.200.counter'
-          ]
-          };
+            ],
+            timing: [
+              { name: 'request.api.v1.IP.123++123++123++123.200.timer' }
+            ]
+        };
         describe('Plugin', function() {
           before(function(done){
             var settings = {
@@ -151,6 +169,18 @@ describe('onPreResponse', function() {
                 });
               });
           });
+          describe('Timing', function(){
+            statsdCall.timing.forEach(function(value, i){
+              it('Timer Should be equal : `' + statsdCall.timing[i].name + '`', function(){
+                expect(timingName[i].name).to.equal(statsdCall.timing[i].name);
+                expect(timingName[i].value).to.exist;
+              });
+
+              it('Timer Should pass a number', function(){
+                expect(!isNaN(timingName[i].value)).to.be.true;
+              });
+            });
+          });
         });
     });
 
@@ -163,8 +193,11 @@ describe('onPreResponse', function() {
                 'response.out.Total.500.counter',
                 'response.out.test.endpoint.counter',
                 'response.out.test.endpoint.500.counter',
-          ]
-          };
+            ],
+            timing: [
+              { name: 'request.test.endpoint.500.timer' }
+            ]
+        };
         describe('Plugin', function() {
           before(function(done){
             var settings = {
@@ -221,6 +254,18 @@ describe('onPreResponse', function() {
                   expect(value).to.equal(incrementName[i]);
                 });
               });
+          });
+          describe('Timing', function(){
+            statsdCall.timing.forEach(function(value, i){
+              it('Timer Should be equal : `' + statsdCall.timing[i].name + '`', function(){
+                expect(timingName[i].name).to.equal(statsdCall.timing[i].name);
+                expect(timingName[i].value).to.exist;
+              });
+
+              it('Timer Should pass a number', function(){
+                expect(!isNaN(timingName[i].value)).to.be.true;
+              });
+            });
           });
         });
     });

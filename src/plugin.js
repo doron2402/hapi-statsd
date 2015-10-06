@@ -34,22 +34,6 @@ exports.register = function(plugin, options, next){
 
   sdc = new Sdc(options);
 
-  plugin.ext('tail', function(request) {
-    var route = request.response.request.route;
-    var method = route.method.toString().toLowerCase();
-    var timer = (request.app && request.app.statsd && request.app.statsd.timer) ? request.app.statsd.timer : new Date();
-    var deltaTimer = timer instanceof Date ? new Date() - timer : timer;
-    var statusCode = request.response.statusCode;
-    var url = buildUrl(request.url.pathname);
-    sdc.increment('tail.request.in.' + method + '.' + url + '.counter');
-    if (statusCode !== 200) {
-      sdc.increment('tail.response.out.error.' + method + '.' + url + '.' + statusCode + '.counter');
-    }
-    sdc.increment('tail.response.out.' + method + '.' + url + '.' + statusCode + '.counter');
-    sdc.timing('request.'+ method + '.' + url + '.timer', deltaTimer);
-  });
-
-
   plugin.ext('onRequest', function(request, reply) {
     var url = buildUrl(request.url.pathname);
     sdc.increment('request.in.' + url + '.counter');
@@ -62,7 +46,10 @@ exports.register = function(plugin, options, next){
 
   plugin.ext('onPreResponse', function(request, reply) {
     var url = buildUrl(request.url.pathname);
+    var timer = (request.app && request.app.statsd && request.app.statsd.timer) ? request.app.statsd.timer : new Date();
+    var deltaTimer = timer instanceof Date ? new Date() - timer : timer;
     var statusCode = isNaN(request.response.statusCode) ? 0 : request.response.statusCode;
+
     if (statusCode === 0 && request.response.output && request.response.output.statusCode) {
       statusCode = request.response.output.statusCode;
     }
@@ -70,6 +57,7 @@ exports.register = function(plugin, options, next){
     sdc.increment('response.out.Total.' + statusCode + '.counter');
     sdc.increment('response.out.' + url + '.counter');
     sdc.increment('response.out.' + url + '.' + statusCode + '.counter');
+    sdc.timing('request.' + url + '.' + statusCode + '.timer', deltaTimer);
     reply.continue();
   });
 
