@@ -4,12 +4,12 @@ Hapi Statsd (Plugin)
 
 Hapi.js Plugin for [statsd](https://github.com/etsy/statsd).
 
-This will track your 
+This will track your
     - Count: incoming Request All
     - Count: incoming Request by path
     - Timing: response for all paths
     - Timing: response by path
-    - Count: total response 
+    - Count: total response
     - Count: response by status code
     - Count: response by url
     - Count: response by url and status code
@@ -17,7 +17,7 @@ This will track your
 STATSD
 =======
     - For Ex' [GET] /users/all -> Response [200]
-    - onRequest 
+    - onRequest
         - Count: increment `request.in.users.all.counter'
         - Count: increment `request.in.Total.counter`
     - onPreResponse
@@ -43,6 +43,10 @@ server.register([
         prefix: 'node-app.development.local.', // Prefix
         port: 8125, //must be a number default 8125
         debug: true //could be true/false
+        removePath: {
+          number: 1, // MUST BE INTEGER
+          regex: '/\[[0-9]+\]/' //when to remove part of the path when empty it will on all the routes
+        }
     }
 ])...
 ```

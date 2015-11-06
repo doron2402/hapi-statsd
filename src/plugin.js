@@ -4,6 +4,27 @@ var Joi = require('joi');
 var sdc;
 
 exports.register = function(plugin, options, next){
+  var removeElementFromPath = function(str, num) {
+    var tmpArr = str.split('.');
+    tmpArr.splice(-1,options.removePath.number);
+    str = tmpArr.join('.');
+    return str;
+  };
+
+  var removeLastPath = function(str) {
+    if (options.removePath && options.removePath.number > 0) {
+      if (options.removePath.regex) {
+        var pattern = new RegExp(options.removePath.regex);
+        if (pattern.test(str)) {
+          str = removeElementFromPath(str, options.removePath.number);
+        }
+      } else {
+        str = removeElementFromPath(str, options.removePath.number);
+      }
+    }
+    return str;
+  };
+
   var removeDotStartEnd = function(str) {
     if (str.charAt(0) === '.') {
       str = str.slice(1,str.length);
@@ -17,7 +38,7 @@ exports.register = function(plugin, options, next){
   };
 
   var buildUrl = function(pathname) {
-    return removeDotStartEnd(pathname.replace(/\./gi,'++').replace(/\//gi,'.'));
+    return removeLastPath(removeDotStartEnd(pathname.replace(/\./gi,'++').replace(/\//gi,'.')));
   };
   var schemaOptions = Joi.object().options({ abortEarly: false }).keys({
     host: Joi.string(),
