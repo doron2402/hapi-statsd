@@ -1,12 +1,13 @@
 const Sdc = require('statsd-client');
 const Joi = require('joi');
+const _ = require('lodash');
 
 let sdc;
 
 exports.register = function registerStatsdPlugin(plugin, options, next) {
   function removeElementFromPath(str) {
     const tmpArr = str.split('.');
-    tmpArr.splice(-1,options.removePath.number);
+    tmpArr.splice(-1, options.removePath.number);
     str = tmpArr.join('.');
     return str;
   }
@@ -18,7 +19,7 @@ exports.register = function registerStatsdPlugin(plugin, options, next) {
         if (pattern.test(str)) {
           str = removeElementFromPath(str, options.removePath.number);
         }
-      }      else {
+      } else {
         str = removeElementFromPath(str, options.removePath.number);
       }
     }
@@ -59,28 +60,24 @@ exports.register = function registerStatsdPlugin(plugin, options, next) {
 
   plugin.ext('onRequest', function(request, reply) {
     const url = buildUrl(request.url.pathname);
-    sdc.increment('request.in.' + url + '.counter');
-    sdc.increment('request.in.total.counter');
-    request.app = request.app || {};
-    request.app.statsd = request.app.statsd || {};
-    request.app.statsd.timer = new Date();
+    sdc.increment(`request.in.${url}`);
+    _.set(request, 'app.statsd.timer', new Date());
     reply.continue();
   });
 
   plugin.ext('onPreResponse', function(request, reply) {
     const url = buildUrl(request.url.pathname);
-    const timer = request.app && request.app.statsd && request.app.statsd.timer ? request.app.statsd.timer : new Date();
-    const deltaTimer = timer instanceof Date ? new Date() - timer : timer;
+    const timer = _.get(request, 'app.statsd.timer', new Date());
+    const deltaTimer = new Date() - timer;
     let statusCode = isNaN(request.response.statusCode) ? 0 : request.response.statusCode;
 
     if (statusCode === 0 && request.response.output && request.response.output.statusCode) {
       statusCode = request.response.output.statusCode;
     }
-    sdc.increment('response.out.total.counter');
-    sdc.increment('response.out.total.' + statusCode + '.counter');
-    sdc.increment('response.out.' + url + '.counter');
-    sdc.increment('response.out.' + url + '.' + statusCode + '.counter');
-    sdc.timing('request.' + url + '.' + statusCode + '.timer', deltaTimer);
+
+    sdc.increment(`response.out.${statusCode}.${url}`);
+    sdc.timing(`request.${statusCode}.${url}`, deltaTimer);
+
     reply.continue();
   });
 

@@ -2,12 +2,12 @@ const expect = require('expect.js');
 const rewire = require('rewire');
 const plugin = rewire('../src/plugin.js');
 
-describe('onRequest', function() {
-  describe('Plugin', function() {
+describe('onRequest', () => {
+  describe('Plugin', () => {
     const incrementName = [];
-    const firstIncCall = 'request.in.test.endpoint.counter';
-    const secondIncCall = 'request.in.total.counter';
-    before(function(done) {
+    const firstIncCall = 'request.in.test.endpoint';
+
+    before((done) => {
       const settings = {
         host: 'statsd.localhost',
         prefix: 'search-api-node.development.local.',
@@ -60,20 +60,18 @@ describe('onRequest', function() {
             }
           });
         }
-      }, settings, function() {});
+      }, settings, () => {});
     });
-    it('Counter first call should be equal : `' + firstIncCall + '`', function() {
+
+    it(`Counter first call should equal '${firstIncCall}'`, () => {
       expect(incrementName[0]).to.equal(firstIncCall);
     });
-    it('Counter second call should be equal : `' + secondIncCall + '`', function() {
-      expect(incrementName[1]).to.equal(secondIncCall);
-    });
   });
-  describe('When path name contains dots for ex` ip address', function() {
+  describe('When path name contains dots for ex` ip address', () => {
     const incrementName = [];
-    const firstIncCall = 'request.in.api.v1.IP.123++123++123++123.counter';
-    const secondIncCall = 'request.in.total.counter';
-    before(function(done) {
+    const firstIncCall = 'request.in.api.v1.IP.123++123++123++123';
+
+    before((done) => {
       const settings = {
         host: 'statsd.localhost',
         prefix: 'search-api-node.development.local.',
@@ -120,13 +118,11 @@ describe('onRequest', function() {
             }
           });
         }
-      }, settings, function() {});
+      }, settings, () => {});
     });
-    it('Counter first call should be equal : `' + firstIncCall + '`', function() {
+
+    it(`Counter first call should equal '${firstIncCall}'`, () => {
       expect(incrementName[0]).to.equal(firstIncCall);
-    });
-    it('Counter second call should be equal : `' + secondIncCall + '`', function() {
-      expect(incrementName[1]).to.equal(secondIncCall);
     });
   });
 });

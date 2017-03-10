@@ -2,22 +2,15 @@ const expect = require('expect.js');
 const rewire = require('rewire');
 const plugin = rewire('../src/plugin.js');
 
-describe('onPreResponse', function() {
-  describe('200 Status Code', function() {
+describe('onPreResponse', () => {
+  describe('200 Status Code', () => {
     const incrementName = [];
     const timingName = [];
     const statsdCall = {
-      increment: [
-        'response.out.total.counter',
-        'response.out.total.200.counter',
-        'response.out.test.endpoint.counter',
-        'response.out.test.endpoint.200.counter'
-      ],
-      timing: [
-              { name: 'request.test.endpoint.200.timer' }
-      ]
+      increment: ['response.out.200.test.endpoint'],
+      timing: [{name: 'request.200.test.endpoint'}]
     };
-    describe('Plugin', function() {
+    describe('Plugin', () => {
       before(function(done) {
         const settings = {
           host: 'statsd.localhost',
@@ -70,24 +63,24 @@ describe('onPreResponse', function() {
               }
             });
           }
-        }, settings, function() {});
+        }, settings, () => {});
       });
 
-      describe('Increment', function() {
+      describe('Increment', () => {
         statsdCall.increment.forEach(function(value, i) {
-          it('Counter should be equal : `' + value + '`', function() {
+          it(`Counter should equal '${value}'`, () => {
             expect(value).to.equal(incrementName[i]);
           });
         });
       });
-      describe('Timing', function() {
+      describe('Timing', () => {
         statsdCall.timing.forEach(function(value, i) {
-          it('Timer Should be equal : `' + statsdCall.timing[i].name + '`', function() {
+          it(`Timer should equal '${statsdCall.timing[i].name}'`, () => {
             expect(timingName[i].name).to.equal(statsdCall.timing[i].name);
             expect(timingName[i].value).to.exist;
           });
 
-          it('Timer Should pass a number', function() {
+          it('Timer should pass a number', () => {
             expect(!isNaN(timingName[i].value)).to.be.true;
           });
         });
@@ -95,21 +88,14 @@ describe('onPreResponse', function() {
     });
   });
 
-  describe('When part of the URL contains dots, for ex` IP address', function() {
+  describe('When part of the URL contains dots, for ex` IP address', () => {
     const incrementName = [];
     const timingName = [];
     const statsdCall = {
-      increment: [
-        'response.out.total.counter',
-        'response.out.total.200.counter',
-        'response.out.api.v1.IP.123++123++123++123.counter',
-        'response.out.api.v1.IP.123++123++123++123.200.counter'
-      ],
-      timing: [
-              { name: 'request.api.v1.IP.123++123++123++123.200.timer' }
-      ]
+      increment: ['response.out.200.api.v1.IP.123++123++123++123'],
+      timing: [{ name: 'request.200.api.v1.IP.123++123++123++123'}]
     };
-    describe('Plugin', function() {
+    describe('Plugin', () => {
       before(function(done) {
         const settings = {
           host: 'statsd.localhost',
@@ -156,24 +142,24 @@ describe('onPreResponse', function() {
               }
             });
           }
-        }, settings, function() {});
+        }, settings, () => {});
       });
 
-      describe('Increment', function() {
+      describe('Increment', () => {
         statsdCall.increment.forEach(function(value, i) {
-          it('Counter should be equal : `' + value + '`', function() {
+          it(`Counter should equal '${value}'`, () => {
             expect(value).to.equal(incrementName[i]);
           });
         });
       });
-      describe('Timing', function() {
+      describe('Timing', () => {
         statsdCall.timing.forEach(function(value, i) {
-          it('Timer Should be equal : `' + statsdCall.timing[i].name + '`', function() {
+          it(`Timer should equal '${statsdCall.timing[i].name}'`, () => {
             expect(timingName[i].name).to.equal(statsdCall.timing[i].name);
             expect(timingName[i].value).to.exist;
           });
 
-          it('Timer Should pass a number', function() {
+          it('Timer Should pass a number', () => {
             expect(!isNaN(timingName[i].value)).to.be.true;
           });
         });
@@ -181,21 +167,14 @@ describe('onPreResponse', function() {
     });
   });
 
-  describe('500 Status Code', function() {
+  describe('500 Status Code', () => {
     const incrementName = [];
     const timingName = [];
     const statsdCall = {
-      increment: [
-        'response.out.total.counter',
-        'response.out.total.500.counter',
-        'response.out.test.endpoint.counter',
-        'response.out.test.endpoint.500.counter'
-      ],
-      timing: [
-        { name: 'request.test.endpoint.500.timer' }
-      ]
+      increment: ['response.out.500.test.endpoint'],
+      timing: [{name: 'request.500.test.endpoint'}]
     };
-    describe('Plugin', function() {
+    describe('Plugin', () => {
       before(function(done) {
         const settings = {
           host: 'statsd.localhost',
@@ -242,24 +221,24 @@ describe('onPreResponse', function() {
               }
             });
           }
-        }, settings, function() {});
+        }, settings, () => {});
       });
 
-      describe('Increment', function() {
+      describe('Increment', () => {
         statsdCall.increment.forEach(function(value, i) {
-          it('Counter should be equal : `' + value + '`', function() {
+          it(`Counter should equal '${value}'`, () => {
             expect(value).to.equal(incrementName[i]);
           });
         });
       });
-      describe('Timing', function() {
+      describe('Timing', () => {
         statsdCall.timing.forEach(function(value, i) {
-          it('Timer Should be equal : `' + statsdCall.timing[i].name + '`', function() {
+          it(`Timer should equal '${statsdCall.timing[i].name}'`, () => {
             expect(timingName[i].name).to.equal(statsdCall.timing[i].name);
             expect(timingName[i].value).to.exist;
           });
 
-          it('Timer Should pass a number', function() {
+          it('Timer Should pass a number', () => {
             expect(!isNaN(timingName[i].value)).to.be.true;
           });
         });
@@ -267,21 +246,14 @@ describe('onPreResponse', function() {
     });
   });
 
-  describe('When part of the URL contains dots, for ex` IP address With option removePath eql to 1', function() {
+  describe('When part of the URL contains dots, for ex` IP address With option removePath eql to 1', () => {
     const incrementName = [];
     const timingName = [];
     const statsdCall = {
-      increment: [
-        'response.out.total.counter',
-        'response.out.total.200.counter',
-        'response.out.api.v1.IP.counter',
-        'response.out.api.v1.IP.200.counter'
-      ],
-      timing: [
-        { name: 'request.api.v1.IP.200.timer' }
-      ]
+      increment: ['response.out.200.api.v1.IP'],
+      timing: [{name: 'request.200.api.v1.IP'}]
     };
-    describe('Plugin', function() {
+    describe('Plugin', () => {
       before(function(done) {
         const settings = {
           host: 'statsd.localhost',
@@ -332,24 +304,24 @@ describe('onPreResponse', function() {
               }
             });
           }
-        }, settings, function() {});
+        }, settings, () => {});
       });
 
-      describe('Increment', function() {
+      describe('Increment', () => {
         statsdCall.increment.forEach(function(value, i) {
-          it('Counter should be equal : `' + value + '`', function() {
+          it(`Counter should equal '${value}'`, () => {
             expect(value).to.equal(incrementName[i]);
           });
         });
       });
-      describe('Timing', function() {
+      describe('Timing', () => {
         statsdCall.timing.forEach(function(value, i) {
-          it('Timer Should be equal : `' + statsdCall.timing[i].name + '`', function() {
+          it(`Timer should equal '${statsdCall.timing[i].name}'`, () => {
             expect(timingName[i].name).to.equal(statsdCall.timing[i].name);
             expect(timingName[i].value).to.exist;
           });
 
-          it('Timer Should pass a number', function() {
+          it('Timer Should pass a number', () => {
             expect(!isNaN(timingName[i].value)).to.be.true;
           });
         });
